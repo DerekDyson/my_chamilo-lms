@@ -1,0 +1,93 @@
+{% set admin_chamilo_announcements_disable = 'admin_chamilo_announcements_disable'|api_get_configuration_value %}
+
+{% block content %}
+    {% autoescape false %}
+        {% if not admin_chamilo_announcements_disable %}
+            <div class="alert alert-info alert-dismissible fade show d-none" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="{{ 'Close'|trans }}">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div id="chamilo-news-content"></div>
+            </div>
+        {% endif %}
+
+        <div id="settings" >
+            <div class="row">
+            {% for block_item in blocks_admin %}
+                <div id="tabs-{{ loop.index }}" class="col-4">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="card-title">{{ block_item.icon }} {{ block_item.label }}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-search">
+                                {{ block_item.search_form }}
+                            </div>
+                            <div class="card-description mp-3 mb-3">
+                                {% if block_item.description is defined %}
+                                    {{ block_item.description }}
+                                {% endif %}
+                            </div>
+                            {% if block_item.items is not empty %}
+                                <ul class="list-group">
+                                    {% for url in block_item.items %}
+                                        {% if url.url is not empty %}
+                                            <li class="list-group-item">
+                                                <a href="{{ url.url }}">
+                                                    {{ url.label }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+
+                            {% if block_item.extra is not null %}
+                                <div>
+                                    {{ block_item.extra }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+
+{#            <div class="row">#}
+{#                {% for role in app.user.roles %}#}
+{#                    {% set role = role | lower | replace ({ 'role_' : ''}) %}#}
+{#                    {% if role in ['global_admin'] %}#}
+{#                        {% include '@ChamiloCore/Admin/' ~ role ~ '/role_index.html.twig' %}#}
+{#                    {% endif %}#}
+{#                {% endfor %}#}
+{#            </div>#}
+        </div>
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <script>
+                $(function () {
+                    $.ajax({
+                        url: '{{ web_admin_ajax_url }}?a=version',
+                        success: function (version) {
+                            $(".admin-block-version").html(version);
+                        }
+                    });
+
+                    {% if not admin_chamilo_announcements_disable %}
+                        $('#chamilo-news-content').load(
+                            '{{ web_admin_ajax_url }}?a=get_latest_news',
+                            function (response) {
+                                if (!response.length) {
+                                    return;
+                                }
+
+                                $(this).parent().removeClass('d-none');
+                            }
+                        );
+                    {% endif %}
+                });
+            </script>
+
+        {% endif %}
+    {% endautoescape %}
+{% endblock %}

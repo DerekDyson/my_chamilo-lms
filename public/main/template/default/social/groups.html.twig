@@ -1,0 +1,18 @@
+{% extends '@ChamiloCore/Layout/layout_one_col.html.twig' %}
+{% import '@ChamiloCore/Macros/box.html.twig' as macro %}
+
+{% block content %}
+{% autoescape false %}
+<div class="row">
+    <div class="col-md-4">
+        {% set avatar %}
+            {% include '@ChamiloCore/Social/user_block.html.twig' %}
+        {% endset %}
+        {{ macro.panel('', avatar ) }}
+    </div>
+    <div class="col-md-8">
+        {{ social_right_content }}
+    </div>
+</div>
+{% endautoescape %}
+{% endblock %}

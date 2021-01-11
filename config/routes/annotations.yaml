@@ -1,0 +1,7 @@
+core_controllers:
+    resource: '../../src/CoreBundle/Controller/'
+    type: annotation
+
+course_controllers:
+    resource: '../../src/CourseBundle/Controller/'
+    type: annotation

@@ -1,0 +1,368 @@
+<?php
+
+/* For licensing terms, see /license.txt */
+
+namespace Chamilo\CoreBundle\Entity;
+
+use Chamilo\CoreBundle\Traits\CourseTrait;
+use Chamilo\CoreBundle\Traits\UserTrait;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TrackEAttempt.
+ *
+ * @ORM\Table(
+ *  name="track_e_attempt",
+ *  indexes={
+ *      @ORM\Index(name="course", columns={"c_id"}),
+ *      @ORM\Index(name="exe_id", columns={"exe_id"}),
+ *      @ORM\Index(name="user_id", columns={"user_id"}),
+ *      @ORM\Index(name="question_id", columns={"question_id"}),
+ *      @ORM\Index(name="session_id", columns={"session_id"}),
+ *      @ORM\Index(name="idx_track_e_attempt_tms", columns={"tms"}),
+ *  }
+ * )
+ * @ORM\Entity
+ */
+class TrackEAttempt
+{
+    use CourseTrait;
+    use UserTrait;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="exe_id", type="integer", nullable=true)
+     */
+    protected $exeId;
+
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="Chamilo\CoreBundle\Entity\User", inversedBy="trackEAttempts")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $user;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="question_id", type="integer", nullable=false)
+     */
+    protected $questionId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="answer", type="text", nullable=false)
+     */
+    protected $answer;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="teacher_comment", type="text", nullable=false)
+     */
+    protected $teacherComment;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="marks", type="float", precision=6, scale=2, nullable=false)
+     */
+    protected $marks;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="position", type="integer", nullable=true)
+     */
+    protected $position;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="tms", type="datetime", nullable=true)
+     */
+    protected $tms;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="session_id", type="integer", nullable=false)
+     */
+    protected $sessionId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="filename", type="string", length=255, nullable=true)
+     */
+    protected $filename;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Chamilo\CoreBundle\Entity\Course", inversedBy="trackEAttempts")
+     * @ORM\JoinColumn(name="c_id", referencedColumnName="id")
+     */
+    protected $course;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="seconds_spent", type="integer")
+     */
+    protected $secondsSpent;
+
+    public function __construct()
+    {
+        $this->teacherComment = '';
+        $this->secondsSpent = 0;
+    }
+
+    /**
+     * Set exeId.
+     *
+     * @param int $exeId
+     *
+     * @return TrackEAttempt
+     */
+    public function setExeId($exeId)
+    {
+        $this->exeId = $exeId;
+
+        return $this;
+    }
+
+    /**
+     * Get exeId.
+     *
+     * @return int
+     */
+    public function getExeId()
+    {
+        return $this->exeId;
+    }
+
+    /**
+     * Set questionId.
+     *
+     * @param int $questionId
+     *
+     * @return TrackEAttempt
+     */
+    public function setQuestionId($questionId)
+    {
+        $this->questionId = $questionId;
+
+        return $this;
+    }
+
+    /**
+     * Get questionId.
+     *
+     * @return int
+     */
+    public function getQuestionId()
+    {
+        return $this->questionId;
+    }
+
+    /**
+     * Set answer.
+     *
+     * @param string $answer
+     *
+     * @return TrackEAttempt
+     */
+    public function setAnswer($answer)
+    {
+        $this->answer = $answer;
+
+        return $this;
+    }
+
+    /**
+     * Get answer.
+     *
+     * @return string
+     */
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
+
+    /**
+     * Set teacherComment.
+     *
+     * @param string $teacherComment
+     *
+     * @return TrackEAttempt
+     */
+    public function setTeacherComment($teacherComment)
+    {
+        $this->teacherComment = $teacherComment;
+
+        return $this;
+    }
+
+    /**
+     * Get teacherComment.
+     *
+     * @return string
+     */
+    public function getTeacherComment()
+    {
+        return $this->teacherComment;
+    }
+
+    /**
+     * Set marks.
+     *
+     * @param float $marks
+     *
+     * @return TrackEAttempt
+     */
+    public function setMarks($marks)
+    {
+        $this->marks = $marks;
+
+        return $this;
+    }
+
+    /**
+     * Get marks.
+     *
+     * @return float
+     */
+    public function getMarks()
+    {
+        return $this->marks;
+    }
+
+    /**
+     * Set position.
+     *
+     * @param int $position
+     *
+     * @return TrackEAttempt
+     */
+    public function setPosition($position)
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    /**
+     * Get position.
+     *
+     * @return int
+     */
+    public function getPosition()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Set tms.
+     *
+     * @param \DateTime $tms
+     *
+     * @return TrackEAttempt
+     */
+    public function setTms($tms)
+    {
+        $this->tms = $tms;
+
+        return $this;
+    }
+
+    /**
+     * Get tms.
+     *
+     * @return \DateTime
+     */
+    public function getTms()
+    {
+        return $this->tms;
+    }
+
+    /**
+     * Set sessionId.
+     *
+     * @param int $sessionId
+     *
+     * @return TrackEAttempt
+     */
+    public function setSessionId($sessionId)
+    {
+        $this->sessionId = $sessionId;
+
+        return $this;
+    }
+
+    /**
+     * Get sessionId.
+     *
+     * @return int
+     */
+    public function getSessionId()
+    {
+        return $this->sessionId;
+    }
+
+    /**
+     * Set filename.
+     *
+     * @param string $filename
+     *
+     * @return TrackEAttempt
+     */
+    public function setFilename($filename)
+    {
+        $this->filename = $filename;
+
+        return $this;
+    }
+
+    /**
+     * Get filename.
+     *
+     * @return string
+     */
+    public function getFilename()
+    {
+        return $this->filename;
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getSecondsSpent(): int
+    {
+        return $this->secondsSpent;
+    }
+
+    public function setSecondsSpent(int $secondsSpent): TrackEAttempt
+    {
+        $this->secondsSpent = $secondsSpent;
+
+        return $this;
+    }
+}
